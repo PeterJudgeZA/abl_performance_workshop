@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="OpenEdge Library" default="build" basedir=".">
+	<property environment="env" />
+	<property name="build.root" value="${env.BUILD_ROOT}"/>	
+
+	<taskdef resource="PCT.properties"    />
+	<typedef resource="types.properties"  />
+	
+	<!-- Set n' forget -->
+	<DlcHome value="${env.DLC}" />
+	
+	<mkdir dir="${build.root}/bin/"/>
+    <mkdir dir="${build.root}/listing/"/>
+	
+	<!-- Builds/compiles everything -->
+	<target name="build" description="Builds code" 
+		  depends="build-src, build-dlc-src">
+	</target>
+	
+	<target name="build-src" description="Builds DLCwshop source files">
+	    <!-- Clean all the temp, junk files -->
+	    <delete>
+	        <fileset dir="${build.root}/out/"></fileset>
+	        <fileset dir="${build.root}/listing/"></fileset>
+	    </delete>
+	    
+		<PCTCompileExt 
+              graphicalMode="false"
+              destDir="${build.root}/bin" 
+              cpStream="UTF-8" 
+              multiCompile="true" 
+              listing="true"
+              xrefDir="${build.root}/listing/"
+              forceCompile="true">
+        	
+        	<PCTConnection 
+        		  dbName="sports2000" 
+        		  dbDir="C:/devarea/common/db/oe117/bigsports" 
+        		  logicalName="s2k" 
+        		  singleUser="false" />
+        	
+            <propath>            	
+                <pathelement path="${build.root}/dlc-src/netlib"/>
+                <pathelement path="${build.root}/dlc-src/corelib"/>
+            </propath>
+            
+            <fileset dir="${build.root}/src/">
+                <include name="**/*.p" />
+                <include name="**/*.w" />
+                <include name="**/*.cls" />
+            </fileset>
+        </PCTCompileExt>
+	</target>
+	
+	<target name="build-dlc-src" description="Builds DLC source files">
+		<PCTCompileExt 
+              graphicalMode="false"
+              destDir="${build.root}/bin" 
+              cpStream="UTF-8" 
+              multiCompile="true" 
+			  listing="true"
+			  xrefDir="${build.root}/listing/"
+              forceCompile="true">
+			
+			<propath>
+				<pathelement path="${build.root}/dlc-src/netlib"/>
+				<pathelement path="${build.root}/dlc-src/corelib"/>
+			</propath>
+			
+			<fileset dir="${build.root}/dlc-src/corelib">
+				<include name="**/*.p" />
+				<include name="**/*.w" />
+				<include name="**/*.cls" />
+			</fileset>
+            <fileset dir="${build.root}/dlc-src/netlib">
+                <include name="**/*.p" />
+                <include name="**/*.w" />
+                <include name="**/*.cls" />
+            </fileset>
+			
+		</PCTCompileExt>
+	</target>
+	
+	<target name="profilter-add-listings" description="Uses a local set of listing files">
+		
+		<PCTRun procedure="profiler_add_listings.p" graphicalMode="false">
+	         <propath>
+	         	<pathelement path="${build.root}/src" />
+	         </propath>
+			
+			<Parameter name="listingDir" value="${build.root}/listing/" />
+			<Parameter name="inputFile"  value="${build.root}/out/slow_http_call_1490056032074.prof" />
+			<Parameter name="outputFile" value="${build.root}/out/local-listings.prof" />			
+		</PCTRun>
+	</target>
+	
+</project>
