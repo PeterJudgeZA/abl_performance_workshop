@@ -1,0 +1,9 @@
+{
+    "enabled": true,
+    "description": "",
+    "listings": false,
+    "coverage": true,
+    "file-name": "",
+    "directory": "",
+    "trace-filter": ""
+}

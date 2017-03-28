@@ -1,0 +1,51 @@
+Project perf_wshop_profiler setup
+1) Project structure
+    /setup
+        setup_steps.txt         ; this doc
+        pasoe.properties        ; Merge setup/pasoe.properties into instance 
+        example.profiler.json   ; outline for JSON config to enable profiler
+    /bin
+        [empty]    
+    /dlc-src 
+        # just to have some code to profile/run against
+        /netlib         ; extract src/netlib/OpenEdge.Net.pl into here
+        /corelib        ; extract src/corelib/OpenEdge.Core.pl into here
+    /listing
+        [empty]    
+    /out
+        [empty]
+    /src
+        *.*
+    /temp
+        [empty]
+    /tools
+        /wshop      ; contains  tools/programs for Lab 1(d)
+        /top_ten    ; WSS code for showing top 50 bad lines
+        profiler_control.zip    ; version of standalone profilter tooling
+        profiler1.1.xip        ; version of standalone profilter tooling
+
+    # PCT/Ant
+    build.properties    
+    build.xml
+    
+    country_list.[xml|json]         ; data files for 'slow' stuff    
+    logging.config                  ; config for logging  (used to profile) 
+    kbase_profiler_object.pdf       ; PDF of kbase entry
+    Profiler_Readme.doc             ; Readme for the profiler with some info about the file
+    
+    
+    # Project artifacts
+    .propath
+    .project
+
+2) Database
+    Get a copy of the BIGSPORTS database from https://github.com/consultingwerk/BigSports20000 
+    Load and run a server.      
+
+3) PASOE Config changes
+    start bigsports database
+    update pasoe.properties to point to DB
+    merge properties into openedge.properties
+    move all src/*.p to $CATALINA_BASE/openedge *except* lab_1*.p and Example/**
+    
+    

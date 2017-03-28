@@ -41,7 +41,7 @@ procedure order_cust:
         first s2k.Customer of s2k.Order where
         creditlimit >= 100
             no-lock:
-
+        
         /* create report */
         run CreateReport.
     end.
@@ -54,7 +54,7 @@ procedure cust_order:
         each s2k.Order of s2k.Customer where
         orderdate = 12/23/2011
             no-lock:
-
+        
         /* create report */
         run CreateReport.
     end.

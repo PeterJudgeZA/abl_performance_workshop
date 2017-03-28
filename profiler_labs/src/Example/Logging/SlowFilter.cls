@@ -16,7 +16,7 @@ using Progress.Json.ObjectModel.JsonObject.
 using Progress.Json.ObjectModel.ObjectModelParser.
 
 class Example.Logging.SlowFilter implements ILoggerFilter:
-    define static public property LOCAL_COUNTRY as character no-undo init 'GB' get.
+    define static public property LOCAL_COUNTRY as character no-undo init 'GB':u get.
     
     method public void ExecuteFilter( input poEvent as LogEvent ):
         define variable sessionDateFormat as character no-undo.
@@ -63,13 +63,6 @@ class Example.Logging.SlowFilter implements ILoggerFilter:
             end.
         end.
         
-        
-        /*
-        etime(yes).
-        repeat while etime le 200:
-        end.
-        */
-        
         if available LocalDefault then
             return LocalDefault.DateFormat. 
         else
@@ -100,12 +93,9 @@ class Example.Logging.SlowFilter implements ILoggerFilter:
             end.
         end.
         
-        
-        /*
         etime(yes).
         repeat while etime le 200:
         end.
-        */
         
         if available LocalDefault then
             return LocalDefault.DateFormat. 

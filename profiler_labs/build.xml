@@ -14,13 +14,34 @@
 	
 	<!-- Builds/compiles everything -->
 	<target name="build" description="Builds code" 
-		  depends="build-src, build-dlc-src">
+		  depends="build-src, build-dlc-src, build-tools">
 	</target>
 	
+	<target name="build-tools" description="Builds workshop tools source files">
+        <PCTCompileExt 
+              graphicalMode="false"
+              destDir="${build.root}/bin" 
+              cpStream="UTF-8" 
+              multiCompile="true" 
+              debugListing="true"
+              debugListingDir="${build.root}/listing/"
+              forceCompile="true">
+            
+            <propath>               
+                <pathelement path="${build.root}/tools/wshop"/>
+            </propath>
+            
+            <fileset dir="${build.root}/tools/wshop">
+                <include name="**/*.p" />
+                <include name="**/*.w" />
+                <include name="**/*.cls" />
+            </fileset>
+        </PCTCompileExt>
+	</target>
+		
 	<target name="build-src" description="Builds DLCwshop source files">
-	    <!-- Clean all the temp, junk files -->
+		<!-- Clean all the temp, junk files -->
 	    <delete>
-	        <fileset dir="${build.root}/out/"></fileset>
 	        <fileset dir="${build.root}/listing/"></fileset>
 	    </delete>
 	    
@@ -29,8 +50,8 @@
               destDir="${build.root}/bin" 
               cpStream="UTF-8" 
               multiCompile="true" 
-              listing="true"
-              xrefDir="${build.root}/listing/"
+		      debugListing="true"
+		      debugListingDir="${build.root}/listing/"
               forceCompile="true">
         	
         	<PCTConnection 
@@ -58,10 +79,10 @@
               destDir="${build.root}/bin" 
               cpStream="UTF-8" 
               multiCompile="true" 
-			  listing="true"
-			  xrefDir="${build.root}/listing/"
+			  debugListing="true"
+			  debugListingDir="${build.root}/listing/"
               forceCompile="true">
-			
+
 			<propath>
 				<pathelement path="${build.root}/dlc-src/netlib"/>
 				<pathelement path="${build.root}/dlc-src/corelib"/>
@@ -82,15 +103,15 @@
 	</target>
 	
 	<target name="profilter-add-listings" description="Uses a local set of listing files">
-		
 		<PCTRun procedure="profiler_add_listings.p" graphicalMode="false">
 	         <propath>
 	         	<pathelement path="${build.root}/src" />
+	         	<pathelement path="${build.root}/tools/wshop" />
 	         </propath>
 			
 			<Parameter name="listingDir" value="${build.root}/listing/" />
-			<Parameter name="inputFile"  value="${build.root}/out/slow_http_call_1490056032074.prof" />
-			<Parameter name="outputFile" value="${build.root}/out/local-listings.prof" />			
+			<Parameter name="inputFile"  value="${build.root}/out/slow_http_call (no-src, no-listing)_1490647682485.profloca" />
+			<Parameter name="outputFile" value="${build.root}/out/local_listings.prof" />
 		</PCTRun>
 	</target>
 	

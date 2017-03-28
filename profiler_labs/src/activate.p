@@ -26,7 +26,8 @@ define variable fileExt as character no-undo.
 define variable dotPos as integer no-undo.
 
 /* ***************************  Main Block  *************************** */
-assign jsonData = cast(new ObjectModelParser():ParseFile('profiler.json'), JsonObject) 
+assign file-info:file-name = 'profiler.json':u
+       jsonData = cast(new ObjectModelParser():ParseFile(file-info:full-pathname), JsonObject) 
        // don't fail the whole request just because we can't profile it 
        no-error.
 
@@ -54,8 +55,8 @@ do on error undo, throw:
                fileExt  = substring(fileName, dotPos + 1)
                fileName = substring(fileName, 1, dotPos - 1)
                .
-    
-    assign profiler:file-name = substitute('&1/&2_&3.&4':u,
+    assign profiler:profiling = true
+           profiler:file-name = substitute('&1/&2_&3.&4':u,
                                            outputDir,
                                            fileName,
                                            session:current-request-info:RequestId,
@@ -70,9 +71,10 @@ do on error undo, throw:
         assign profiler:listings  = true.
                profiler:directory = outputDir.
     
+    log-manager:write-message('PROFILER:FILE-NAME=' + profiler:file-name, 'ACTIV8':u).
+    
     assign profiler:coverage     = jsonData:GetLogical('coverage':u)
            profiler:trace-filter = jsonData:GetCharacter('trace-filter':u)
-           profiler:profiling    = true
            profiler:enabled      = true
            .
     catch e as Progress.Lang.Error :
