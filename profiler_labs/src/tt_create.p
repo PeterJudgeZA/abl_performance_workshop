@@ -25,7 +25,7 @@ for each order  no-lock:
     buffer-copy Order 
         using ordernum
          to ttOrder.
-    //21.
+    // 2.
     create ttOrder2.
     buffer-copy Order 
          to ttOrder2.

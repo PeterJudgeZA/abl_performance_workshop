@@ -1,3 +1,8 @@
+/** This is free and unencumbered software released into the public domain.
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.  **/
 /*------------------------------------------------------------------------
     File        : activate.p
     Purpose     : AppServer ACTIVATE event procedure
@@ -16,7 +21,6 @@ block-level on error undo, throw.
 
 using Progress.Json.ObjectModel.JsonObject.
 using Progress.Json.ObjectModel.ObjectModelParser.
-using OpenEdge.Core.StringConstant.
 
 /* ***************************  Definitions  ************************** */
 define variable jsonData as JsonObject no-undo.
@@ -34,7 +38,7 @@ assign file-info:file-name = 'profiler.json':u
 if     valid-object(jsonData)
    and jsonData:GetLogical('enabled':u)
    then
-do on error undo, throw:
+do:
     // directory is used for the profile output file and listings 
     assign outputDir           = jsonData:GetCharacter('directory':u)
            file-info:file-name = outputDir
@@ -42,7 +46,7 @@ do on error undo, throw:
     if file-info:full-pathname eq ? then
         assign outputDir = session:temp-dir.
     
-    assign outputDir = replace(outputDir, StringConstant:BACKSLASH, '/':u)
+    assign outputDir = right-trim(replace(outputDir, '~\':u, '/':u), '/':u)
            fileName  = jsonData:GetCharacter('file-name':u) no-error.
     if    fileName eq '':u
        or fileName eq ?
@@ -55,15 +59,13 @@ do on error undo, throw:
                fileExt  = substring(fileName, dotPos + 1)
                fileName = substring(fileName, 1, dotPos - 1)
                .
-    assign profiler:profiling = true
+    assign profiler:enabled   = true
+           profiler:profiling = true
            profiler:file-name = substitute('&1/&2_&3.&4':u,
-                                           outputDir,
-                                           fileName,
-                                           session:current-request-info:RequestId,
-                                           fileExt).
+                                           outputDir, fileName, guid, fileExt).
     
     // identify this request's profile file
-    assign profiler:description = substitute('&1 (REQ=&2)':u,
+    assign profiler:description = substitute('&1 (RequestId=&2)':u,
                                         jsonData:GetCharacter('description':u),
                                         session:current-request-info:RequestId).
     
@@ -71,16 +73,22 @@ do on error undo, throw:
         assign profiler:listings  = true.
                profiler:directory = outputDir.
     
-    log-manager:write-message('PROFILER:FILE-NAME=' + profiler:file-name, 'ACTIV8':u).
-    
     assign profiler:coverage     = jsonData:GetLogical('coverage':u)
+           profiler:statistics   = not profiler:coverage
            profiler:trace-filter = jsonData:GetCharacter('trace-filter':u)
-           profiler:enabled      = true
            .
-    catch e as Progress.Lang.Error :
-        log-manager:write-message('ERROR: Cannot enable PROFILER', 'ACTIV8':u).
-        log-manager:write-message(e:GetMessage(1), 'ACTIV8':u).        
-    end catch.
+    log-manager:write-message('PROFILER:FILE-NAME=' + profiler:file-name, 'ACTIV8':u).
+    log-manager:write-message('PROFILER:DESCRIPTION=' + string(profiler:description), 'ACTIV8':u).
+    log-manager:write-message('PROFILER:LISTINGS=' + string(profiler:listings), 'ACTIV8':u).
+    log-manager:write-message('PROFILER:DIRECTORY=' + profiler:directory, 'ACTIV8':u).
+    log-manager:write-message('PROFILER:COVERAGE=' + string(profiler:coverage), 'ACTIV8':u).
+    log-manager:write-message('PROFILER:STATISTICS=' + string(profiler:statistics), 'ACTIV8':u).
+    log-manager:write-message('PROFILER:TRACE-FILTER=' + profiler:trace-filter, 'ACTIV8':u).
 end.
+
+catch e as Progress.Lang.Error :
+    log-manager:write-message('ERROR: ACTIVATE', 'ACTIV8':u).
+    log-manager:write-message(e:GetMessage(1), 'ACTIV8':u).        
+end catch.
 
 /* eof */
