@@ -102,17 +102,4 @@
 		</PCTCompileExt>
 	</target>
 	
-	<target name="profilter-add-listings" description="Uses a local set of listing files">
-		<PCTRun procedure="profiler_add_listings.p" graphicalMode="false">
-	         <propath>
-	         	<pathelement path="${build.root}/src" />
-	         	<pathelement path="${build.root}/tools/wshop" />
-	         </propath>
-			
-			<Parameter name="listingDir" value="${build.root}/listing/" />
-			<Parameter name="inputFile"  value="${build.root}/out/slow_http_call (no-src, no-listing)_1490647682485.profloca" />
-			<Parameter name="outputFile" value="${build.root}/out/local_listings.prof" />
-		</PCTRun>
-	</target>
-	
 </project>

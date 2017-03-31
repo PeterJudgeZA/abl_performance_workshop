@@ -1,3 +1,8 @@
+/** This is free and unencumbered software released into the public domain.
+    Anyone is free to copy, modify, publish, use, compile, sell, or
+    distribute this software, either in source code form or as a compiled
+    binary, for any purpose, commercial or non-commercial, and by any
+    means.  **/
 /*------------------------------------------------------------------------
     File        : slow_http_call.p
     Purpose     : 
@@ -21,8 +26,6 @@ define variable req as IHttpRequest no-undo.
 define variable logger as ILogWriter no-undo.
 define variable client as IHttpClient no-undo. 
 define variable resp as IHttpResponse no-undo.
-
-//find first LocalDefault exclusive-lock no-error.
 
 /* ***************************  Main Block  *************************** */
 logger = LoggerBuilder:GetLogger('slow_http_call').

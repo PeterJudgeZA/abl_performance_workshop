@@ -47,11 +47,10 @@ class Example.Logging.SlowFilter implements ILoggerFilter:
              LocalDefault.Country eq countryCode 
              no-error.
         if not available LocalDefault then
-        do stop-after 2:
+        do:
             assign jsonData = cast(new ObjectModelParser():ParseFile('country_list.json'), JsonArray)
                    max      = jsonData:Length
                    .
-            //do loop = 1 to max
             do loop = jsonData:Length to 1 by -1
                while not available LocalDefault:
                    
@@ -60,6 +59,9 @@ class Example.Logging.SlowFilter implements ILoggerFilter:
                 find LocalDefault where
                      LocalDefault.Country eq countryData:GetCharacter('Name') 
                      no-lock no-error.
+            end.
+            etime(yes).
+                repeat while etime le 500:
             end.
         end.
         
@@ -94,7 +96,7 @@ class Example.Logging.SlowFilter implements ILoggerFilter:
         end.
         
         etime(yes).
-        repeat while etime le 200:
+        repeat while etime le 500:
         end.
         
         if available LocalDefault then

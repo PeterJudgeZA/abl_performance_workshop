@@ -1,0 +1,9 @@
+{
+    "enabled": true,
+    "description": "A profiled session",
+    "listings": false,
+    "coverage": false,
+    "file-name": "request_profile.prof",
+    "directory": "",
+    "trace-filter": ""
+}
